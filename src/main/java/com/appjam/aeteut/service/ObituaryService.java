@@ -5,6 +5,7 @@ import com.appjam.aeteut.domain.Obituary;
 import com.appjam.aeteut.domain.User;
 import com.appjam.aeteut.dto.obituary.ObituaryRequestDto;
 import com.appjam.aeteut.dto.obituary.ObituaryResponseDto;
+import com.appjam.aeteut.dto.userobituarymapping.UserObituaryMappingRequestDto;
 import com.appjam.aeteut.repository.MortuaryRepository;
 import com.appjam.aeteut.repository.ObituaryRepository;
 import com.appjam.aeteut.repository.UserRepository;
@@ -27,6 +28,8 @@ public class ObituaryService {
     private final ObituaryRepository obituaryRepository;
     private final MortuaryRepository mortuaryRepository;
     private final UserRepository userRepository;
+
+    private final UserObituaryMappingService userObituaryMappingService;
 
     public List<ObituaryResponseDto> getAllObituaries() {
         return obituaryRepository.findAll()
@@ -65,6 +68,10 @@ public class ObituaryService {
                         .phoneNumber(obituaryRequestDto.getPhoneNumber())
                         .date(LocalDateTime.parse(obituaryRequestDto.getDate() + "T00:00:00"))
                         .build()
+        );
+
+        userObituaryMappingService.createMapping(
+                new UserObituaryMappingRequestDto(user.getId(), obituary.getId())
         );
 
         return ObituaryResponseDto.from(obituary);
