@@ -1,12 +1,15 @@
 package com.appjam.aeteut.domain;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -25,6 +28,10 @@ public class User {
 
     @Column(unique = true, nullable = false)
     private String email;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "user")
+    private List<Letter> letters = new ArrayList<>();
 
     @CreatedDate
     private LocalDateTime createdAt;

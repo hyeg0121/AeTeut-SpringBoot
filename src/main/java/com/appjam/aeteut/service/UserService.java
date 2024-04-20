@@ -1,6 +1,7 @@
 package com.appjam.aeteut.service;
 
 import com.appjam.aeteut.domain.User;
+import com.appjam.aeteut.dto.letter.LetterResponseDto;
 import com.appjam.aeteut.dto.user.UserRequestDto;
 import com.appjam.aeteut.dto.user.UserResponseDto;
 import com.appjam.aeteut.repository.UserRepository;
@@ -45,6 +46,16 @@ public class UserService {
                 .email(userRequestDto.getEmail())
                 .build();
         return userRepository.save(savedUser);
+    }
+
+    public List<LetterResponseDto> getUsersAllLetters(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("유저가 존재하지 않습니다."));
+
+        return user.getLetters()
+                .stream()
+                .map(LetterResponseDto::from)
+                .collect(Collectors.toList());
     }
 
 }

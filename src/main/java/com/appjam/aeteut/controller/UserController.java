@@ -1,10 +1,13 @@
 package com.appjam.aeteut.controller;
 
 
+import com.appjam.aeteut.dto.letter.LetterResponseDto;
 import com.appjam.aeteut.dto.user.UserRequestDto;
 import com.appjam.aeteut.dto.user.UserResponseDto;
 import com.appjam.aeteut.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,18 +21,27 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping
-    public List<UserResponseDto> findAllUsers() {
-        return userService.getAllUsers();
+    public ResponseEntity<List<UserResponseDto>> findAllUsers() {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(userService.getAllUsers());
     }
 
     @GetMapping("/{id}")
-    public UserResponseDto findAllUsers(@PathVariable Long id) {
-        return userService.getUserById(id);
+    public ResponseEntity<UserResponseDto> findAllUsers(@PathVariable Long id) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(userService.getUserById(id));
     }
 
     @PostMapping
-    public UserResponseDto createUser(@RequestBody UserRequestDto userRequestDto) {
-        return userService.loginUser(userRequestDto);
+    public ResponseEntity<UserResponseDto> createUser(@RequestBody UserRequestDto userRequestDto) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(userService.loginUser(userRequestDto));
+    }
+
+    @GetMapping("/{id}/letters")
+    public ResponseEntity<List<LetterResponseDto>> getUsersAllLetters(@PathVariable Long id) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(userService.getUsersAllLetters(id));
     }
 
 }
