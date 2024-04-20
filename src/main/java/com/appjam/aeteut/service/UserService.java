@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -32,15 +33,18 @@ public class UserService {
         return UserResponseDto.from(user);
     }
 
-    public UserResponseDto createUser(UserRequestDto userRequestDto) {
-        User user = userRepository.save(
-                User.builder()
-                        .name(userRequestDto.getName())
-                        .email(userRequestDto.getEmail())
-                        .build()
-        );
-
+    public UserResponseDto loginUser(UserRequestDto userRequestDto) {
+        Optional<User> optionalUser = userRepository.findByEmail(userRequestDto.getEmail());
+        User user = optionalUser.orElseGet(() -> saveUser(userRequestDto));
         return UserResponseDto.from(user);
+    }
+
+    public User saveUser(UserRequestDto userRequestDto) {
+        User savedUser = User.builder()
+                .name(userRequestDto.getName())
+                .email(userRequestDto.getEmail())
+                .build();
+        return userRepository.save(savedUser);
     }
 
 }
