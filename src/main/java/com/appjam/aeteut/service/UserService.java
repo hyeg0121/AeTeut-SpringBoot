@@ -6,6 +6,7 @@ import com.appjam.aeteut.dto.letter.LetterResponseDto;
 import com.appjam.aeteut.dto.obituary.ObituaryResponseDto;
 import com.appjam.aeteut.dto.user.UserRequestDto;
 import com.appjam.aeteut.dto.user.UserResponseDto;
+import com.appjam.aeteut.exception.UserNotFoundException;
 import com.appjam.aeteut.repository.UserObituararyMappingRepository;
 import com.appjam.aeteut.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +34,7 @@ public class UserService {
 
     public UserResponseDto getUserById(Long id) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("유저가 존재하지 않습니다."));
+                .orElseThrow(() -> UserNotFoundException.EXCEPTION);
 
         return UserResponseDto.from(user);
     }
@@ -54,7 +55,7 @@ public class UserService {
 
     public List<ObituaryResponseDto> getUsersAllObituaries(Long id) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("유저가 존재하지 않습니다."));
+                .orElseThrow(() -> UserNotFoundException.EXCEPTION);
 
         List<UserObituaryMapping> userObituaryMappings = userObituararyMappingRepository.findByUserId(id);
 
@@ -66,7 +67,7 @@ public class UserService {
 
     public List<LetterResponseDto> getUsersAllLetters(Long id) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("유저가 존재하지 않습니다."));
+                .orElseThrow(() -> UserNotFoundException.EXCEPTION);
 
         return user.getLetters()
                 .stream()

@@ -4,6 +4,9 @@ import com.appjam.aeteut.domain.Obituary;
 import com.appjam.aeteut.domain.User;
 import com.appjam.aeteut.domain.UserObituaryMapping;
 import com.appjam.aeteut.dto.userobituarymapping.UserObituaryMappingRequestDto;
+import com.appjam.aeteut.exception.ObituaryNotFoundException;
+import com.appjam.aeteut.exception.UserNotFoundException;
+import com.appjam.aeteut.exception.UserObituaryMappingAlreadyExistException;
 import com.appjam.aeteut.repository.ObituaryRepository;
 import com.appjam.aeteut.repository.UserObituararyMappingRepository;
 import com.appjam.aeteut.repository.UserRepository;
@@ -25,16 +28,16 @@ public class UserObituaryMappingService {
         Long obituaryId = userObituaryMappingRequestDto.getObituaryId();
 
         if (userObituararyMappingRepository.existsByUserIdAndObituaryId(userId, obituaryId)) {
-            throw new IllegalArgumentException("이미 존재하는 매핑");
+            throw UserObituaryMappingAlreadyExistException.EXCEPTION;
         }
 
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("유저가 존재하지 않습니다."));
+                .orElseThrow(() -> UserNotFoundException.EXCEPTION);
 
         Obituary obituary = obituaryRepository.findById(obituaryId)
-                .orElseThrow(() -> new IllegalArgumentException("부고장이 아직 존재하지 않습니다."));
+                .orElseThrow(() -> ObituaryNotFoundException.EXCEPTION);
 
-        UserObituaryMapping userObituaryMapping = userObituararyMappingRepository.save(
+        userObituararyMappingRepository.save(
                 UserObituaryMapping.builder()
                         .user(user)
                         .obituary(obituary)

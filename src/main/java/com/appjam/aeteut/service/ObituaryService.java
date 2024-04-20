@@ -6,6 +6,8 @@ import com.appjam.aeteut.domain.User;
 import com.appjam.aeteut.dto.obituary.ObituaryRequestDto;
 import com.appjam.aeteut.dto.obituary.ObituaryResponseDto;
 import com.appjam.aeteut.dto.userobituarymapping.UserObituaryMappingRequestDto;
+import com.appjam.aeteut.exception.ObituaryNotFoundException;
+import com.appjam.aeteut.exception.UserNotFoundException;
 import com.appjam.aeteut.repository.MortuaryRepository;
 import com.appjam.aeteut.repository.ObituaryRepository;
 import com.appjam.aeteut.repository.UserRepository;
@@ -40,7 +42,7 @@ public class ObituaryService {
 
     public ObituaryResponseDto getObituaryById(Long id) {
         Obituary obituary = obituaryRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("없음"));
+                .orElseThrow(() -> ObituaryNotFoundException.EXCEPTION);
 
         return ObituaryResponseDto.from(obituary);
     }
@@ -58,7 +60,7 @@ public class ObituaryService {
         entityManager.clear();
 
         User user = userRepository.findById(obituaryRequestDto.getUserId())
-                .orElseThrow(() -> new IllegalArgumentException("유저가 존재하지 않습니다."));
+                .orElseThrow(() -> UserNotFoundException.EXCEPTION);
 
         Obituary obituary = obituaryRepository.save(
                 Obituary.builder()
