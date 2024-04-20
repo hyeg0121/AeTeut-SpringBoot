@@ -13,6 +13,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/obituaries")
 @RequiredArgsConstructor
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class ObituaryController {
 
     private final ObituaryService obituaryService;
