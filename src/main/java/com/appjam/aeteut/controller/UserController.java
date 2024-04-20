@@ -2,6 +2,7 @@ package com.appjam.aeteut.controller;
 
 
 import com.appjam.aeteut.dto.letter.LetterResponseDto;
+import com.appjam.aeteut.dto.obituary.ObituaryResponseDto;
 import com.appjam.aeteut.dto.user.UserRequestDto;
 import com.appjam.aeteut.dto.user.UserResponseDto;
 import com.appjam.aeteut.service.UserService;
@@ -42,6 +43,12 @@ public class UserController {
     public ResponseEntity<List<LetterResponseDto>> getUsersAllLetters(@PathVariable Long id) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(userService.getUsersAllLetters(id));
+    }
+
+    @GetMapping("/{id}/obituaries")
+    public ResponseEntity<List<ObituaryResponseDto>> getUsersAllObituaries(@PathVariable Long id) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(userService.getUsersAllObituaries(id));
     }
 
 }

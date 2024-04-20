@@ -1,9 +1,12 @@
 package com.appjam.aeteut.service;
 
 import com.appjam.aeteut.domain.User;
+import com.appjam.aeteut.domain.UserObituaryMapping;
 import com.appjam.aeteut.dto.letter.LetterResponseDto;
+import com.appjam.aeteut.dto.obituary.ObituaryResponseDto;
 import com.appjam.aeteut.dto.user.UserRequestDto;
 import com.appjam.aeteut.dto.user.UserResponseDto;
+import com.appjam.aeteut.repository.UserObituararyMappingRepository;
 import com.appjam.aeteut.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,6 +22,7 @@ import java.util.stream.Collectors;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final UserObituararyMappingRepository userObituararyMappingRepository;
 
     public List<UserResponseDto> getAllUsers() {
         return userRepository.findAll()
@@ -46,6 +50,18 @@ public class UserService {
                 .email(userRequestDto.getEmail())
                 .build();
         return userRepository.save(savedUser);
+    }
+
+    public List<ObituaryResponseDto> getUsersAllObituaries(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("유저가 존재하지 않습니다."));
+
+        List<UserObituaryMapping> userObituaryMappings = userObituararyMappingRepository.findByUserId(id);
+
+        return userObituaryMappings
+                .stream()
+                .map((item) -> ObituaryResponseDto.from(item.getObituary()))
+                .collect(Collectors.toList());
     }
 
     public List<LetterResponseDto> getUsersAllLetters(Long id) {
